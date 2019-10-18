@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import random
 import heapq as heap
-
+from collections import deque
 
 class graph:
 
@@ -158,6 +158,8 @@ def dijAlg(df, start, end):
         coordinate = v[1]
 
         # Identify nodes visited
+        if coordinate == end:
+            break
 
         plt.scatter(coordinate[0], coordinate[1], marker='*',
                     color='.75')
@@ -260,18 +262,19 @@ def aStarAlg(df, start, end):
 
 
 def bfs(df, start, end):
-    q = []
+    q = deque()
 
     # Direction of new path
     direct = [(-1, -1), (-1, 0), (-1, 1), (0, -1),
               (0, 1), (1, -1), (1, 0), (1, 1)]
-    heap.heappush(q, start)
+    #heap.heappush(q, start)
+    q.append(start)
 
     df.updateDist(start, 0)
     df.updateF(start, 0)
 
     while q != []:
-        v = heap.heappop(q)
+        v = q.popleft()
         coordinate = v
 
         if coordinate == end:
@@ -284,7 +287,7 @@ def bfs(df, start, end):
                 if df.isVisited(new_coordinate) == False and new_coordinate not in q:
                     df.visit(new_coordinate)
                     df.updateParent(new_coordinate, coordinate)
-                    heap.heappush(q, (new_coordinate))
+                    q.append(new_coordinate)
 
     itr = end
     p = [end]
@@ -375,7 +378,7 @@ if __name__ == '__main__':
     # Initalize start and end points (from diagram in 2)
 
     start = (2, 2)
-    end = (32, 32)
+    end = (4, 4)
 
     #shortest_p, p = dijAlg(world, start, end)
     #shortest_p, p = aStarAlg(world, start, end)
